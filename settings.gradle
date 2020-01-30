@@ -1,0 +1,4 @@
+rootProject.name = 'FIXME_IN_SETTINGS_DOT_GRADLE'
+
+include 'backend',
+        'frontend'

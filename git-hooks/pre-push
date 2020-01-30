@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+set -x
+
+git pull --rebase
+
+git log --name-only origin/HEAD..HEAD | grep 'backend'
+backendCommits=$?
+echo "Any backend commits? rc = $backendCommits"
+
+if [ "$backendCommits" -ne 0 ]; then
+  echo "No local backend backend commits. Skipping backend tests."
+else
+  echo "Backend local commits. Executing backend tests"
+  ./run-backend-tests.sh
+  rc=$?
+  if [ $rc -ne 0 ]; then
+    echo "Backend tests failed!! rc=$rc"
+    exit $rc
+  else
+    echo "Backend tests reported success. Moving on..."
+  fi
+fi
+
+echo "Checking for frontend commits..."
+git log --name-only origin/HEAD..HEAD | grep 'frontend'
+frontendCommits=$?
+echo "Any frontend commits? rc = $frontendCommits"
+
+if [ $frontendCommits -ne 0 ]; then
+  echo "No local frontend commits. Skipping frontend tests."
+else
+  echo "Frontend local commits. Executing frontend tests"
+  ./run-frontend-tests.sh
+  frontendRc=$?
+  if [ $frontendRc -ne 0 ]; then
+    echo "Front end tests failed!!"
+    exit $frontendRc
+  fi
+fi

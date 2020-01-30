@@ -1,0 +1,25 @@
+plugins {
+    id "com.moowork.node" version "1.3.1"
+}
+
+task('buildFrontend', type: YarnTask) {
+    args = ['build']
+}
+
+buildFrontend.dependsOn(yarn_install)
+build.dependsOn(buildFrontend)
+
+task('test', type: YarnTask) {
+    args = ['test', '--no-watch']
+}
+
+task('lint', type: YarnTask) {
+    args = ['lint']
+}
+
+lint.dependsOn(yarn_install)
+test.dependsOn(lint)
+
+task('start', type: YarnTask) {
+    args = ['start']
+}

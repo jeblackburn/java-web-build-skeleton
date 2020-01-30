@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+echo "Fetching updates to release tags..."
+
+git fetch --prune --prune-tags --force origin
